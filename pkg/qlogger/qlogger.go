@@ -47,11 +47,11 @@ type QLogger struct {
 var QConfig Config = Config{
 	ConsoleLoggingEnabled: true,
 	EncodeLogsAsJson:      true,
-	FileLoggingEnabled:    false,
+	FileLoggingEnabled:    true,
 	Directory:             "./",
 	Filename:              "pixabay.log",
-	MaxSize:               1,
-	MaxBackups:            2,
+	MaxSize:               2,
+	MaxBackups:            1,
 	MaxAge:                7,
 }
 
