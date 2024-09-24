@@ -162,7 +162,7 @@ func GetCrawlerImage(filename, downloadFolder string,
 
 	if res.StatusCode != 200 {
 		err = errors.New(res.Status)
-		log.Println("Err: ", err)
+		log.Println(filename+" download error: ", err)
 		return err
 	}
 
