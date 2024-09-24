@@ -16,10 +16,19 @@ import (
 	"golang.org/x/net/html"
 )
 
+var backoffScedule = []time.Duration{
+	1 * time.Second,
+	3 * time.Second,
+	10 * time.Second,
+}
+
 func CrawlerSearchPhoto(tag string,
 	cookies []http.Cookie,
 	page int,
 ) ([]string, int64, error) {
+	var err error
+	var res *http.Response
+
 	client := &http.Client{
 		Transport: &http.Transport{
 			TLSClientConfig: &tls.Config{
@@ -63,12 +72,23 @@ func CrawlerSearchPhoto(tag string,
 
 	log.Println(req.URL.String(), " , header: ", req.Header)
 
-	res, err := client.Do(req)
-	if err != nil {
-		return nil, 0, err
+	for _, b := range backoffScedule {
+		res, err = client.Do(req)
+
+		if err == nil && res.StatusCode == 200 {
+			break
+		}
+
+		log.Errorln("Request error: ", err, ", status code: ", res.StatusCode)
+		log.Println("Retry search in ", b, "s")
+		time.Sleep(b)
 	}
 
 	defer res.Body.Close()
+
+	if err != nil {
+		return nil, 0, err
+	}
 
 	if res.StatusCode == 200 {
 		// Parse links
@@ -101,6 +121,9 @@ func GetCrawlerImage(filename, downloadFolder string,
 	downloadToken chan struct{},
 	shouldCheckHiddenFile bool,
 ) error {
+	var err error
+	var res *http.Response
+
 	if shouldCheckHiddenFile {
 		_, err := os.Stat(downloadFolder + "/.qnap")
 		if err != nil {
@@ -108,7 +131,7 @@ func GetCrawlerImage(filename, downloadFolder string,
 		}
 	}
 
-	_, err := os.Stat(downloadFolder + "/" + filename)
+	_, err = os.Stat(downloadFolder + "/" + filename)
 
 	if err == nil {
 		// File exist
@@ -150,7 +173,20 @@ func GetCrawlerImage(filename, downloadFolder string,
 	// Wait for semaphore
 	downloadToken <- struct{}{}
 
-	res, err := client.Do(req)
+	for _, b := range backoffScedule {
+		res, err = client.Do(req)
+
+		if err == nil && res.StatusCode == 200 {
+			break
+		}
+
+		log.Errorln("Request error: ", err, ", status code: ", res.StatusCode)
+		log.Println("Retry download ", filename, " in ", b, "s")
+		time.Sleep(b)
+	}
+
+	defer res.Body.Close()
+
 	if err != nil {
 		return err
 	}
