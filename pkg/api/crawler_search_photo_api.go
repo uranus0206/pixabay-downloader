@@ -161,9 +161,15 @@ func GetCrawlerImage(filename, downloadFolder string,
 	defer res.Body.Close()
 
 	if res.StatusCode != 200 {
-		err = errors.New(res.Status)
-		log.Println(filename+" download error: ", err)
-		return err
+		if res.StatusCode == 404 || res.StatusCode == 400 {
+			log.Println(filename+" download error: ", err)
+			log.Println(filename + " skip download since file or link not exist.")
+			return nil
+		} else {
+			err = errors.New(res.Status)
+			log.Println(filename+" download error: ", err)
+			return err
+		}
 	}
 
 	body, _ := io.ReadAll(res.Body)
