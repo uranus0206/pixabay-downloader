@@ -10,7 +10,7 @@ func TestCrawlerSearchPhoto(t *testing.T) {
 	var cookies []http.Cookie
 	cookies = append(cookies, http.Cookie{
 		Name:    "sessionid",
-		Value:   ".eJxVjMsOwiAQRf-FtWmgw9OfITAMKdqHKbAy_ru1C6OruzjnnifzobfJ90q7L4ldmdScW-Usu_yiGPBO64c_9u1G2IbeylwH7LVtyykO5VTXsJDfdk9LKPP39xebQp2OEgIEZWQSI-gooskiE9oxWe00VyOAkqS5VE5rl48NRiQOiIZn68BF9noDfgo95Q:1sq4pq:T6QLC_J1hs3rLs6RLKZDBDbXBBgRZPoCsPr1QjMQwQw",
+		Value:   "",
 		Expires: time.Now().Add(1 * time.Hour),
 	})
 	cookies = append(cookies, http.Cookie{
@@ -30,7 +30,7 @@ func TestCrawlerSearchPhoto(t *testing.T) {
 	})
 	cookies = append(cookies, http.Cookie{
 		Name:    "csfrtoken",
-		Value:   "RCuIUpJEhOSHw6j49np3mVNHpMjdJ9ll",
+		Value:   "",
 		Expires: time.Now().Add(1 * time.Hour),
 	})
 	_, _, err := CrawlerSearchPhoto("people", cookies, 4)
@@ -47,7 +47,7 @@ func TestGetCrawlerImage(t *testing.T) {
 	var cookies []http.Cookie
 	cookies = append(cookies, http.Cookie{
 		Name:    "sessionid",
-		Value:   ".eJxVjMsOwiAQRf-FtWmgw9OfITAMKdqHKbAy_ru1C6OruzjnnifzobfJ90q7L4ldmdScW-Usu_yiGPBO64c_9u1G2IbeylwH7LVtyykO5VTXsJDfdk9LKPP39xebQp2OEgIEZWQSI-gooskiE9oxWe00VyOAkqS5VE5rl48NRiQOiIZn68BF9noDfgo95Q:1sq4pq:T6QLC_J1hs3rLs6RLKZDBDbXBBgRZPoCsPr1QjMQwQw",
+		Value:   "",
 		Expires: time.Now().Add(1 * time.Hour),
 	})
 	cookies = append(cookies, http.Cookie{
@@ -62,7 +62,7 @@ func TestGetCrawlerImage(t *testing.T) {
 	})
 	cookies = append(cookies, http.Cookie{
 		Name:    "csfrtoken",
-		Value:   "RCuIUpJEhOSHw6j49np3mVNHpMjdJ9ll",
+		Value:   "",
 		Expires: time.Now().Add(1 * time.Hour),
 	})
 

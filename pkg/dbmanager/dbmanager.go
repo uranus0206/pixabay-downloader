@@ -72,3 +72,8 @@ func (db *DbManager) GetPixabayByKey() (DbPixabay, error) {
 
 	return found, res.Error
 }
+
+func (db *DbManager) DeletePixabay(record *DbPixabay) error {
+	res := db.gormDB.Unscoped().Delete(&record)
+	return res.Error
+}
