@@ -189,9 +189,8 @@ func main() {
 					// Crawled all photos of current tag.
 					if len(tags) == 0 {
 						// Start with latest of all photos.
-						pixabay.PageOffset = 1
-						pixabay.CurrentTag = ""
-						dbmanager.Dbm.AddPixabayRecord(&pixabay)
+						dbmanager.Dbm.DeletePixabay(&pixabay)
+						time.Sleep(500 * time.Millisecond)
 						log.Panic("all done")
 
 					} else {
