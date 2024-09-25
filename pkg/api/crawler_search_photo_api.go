@@ -41,11 +41,12 @@ func CrawlerSearchPhoto(tag string,
 		Timeout: 30 * time.Second,
 	}
 
-	getApi := "https://pixabay.com/images/search"
+	getApi := "https://pixabay.com/photos/search"
 
 	if tag != "" {
 		getApi += "/"
 		getApi += tag
+		getApi += "/"
 	}
 
 	getApi += "?"
@@ -54,7 +55,6 @@ func CrawlerSearchPhoto(tag string,
 		page = 1
 	}
 	getApi += "&pagi=" + strconv.Itoa(page)
-	getApi += "&image_type=photo"
 
 	req, _ := http.NewRequest(http.MethodGet, getApi, nil)
 
@@ -80,7 +80,7 @@ func CrawlerSearchPhoto(tag string,
 		}
 
 		log.Errorln("Request error: ", err, ", status code: ", res.StatusCode)
-		log.Println("Retry search in ", b, "s")
+		log.Println("Retry search in ", b)
 		time.Sleep(b)
 	}
 
@@ -92,13 +92,14 @@ func CrawlerSearchPhoto(tag string,
 
 	if res.StatusCode == 200 {
 		// Parse links
-		// body, err := io.ReadAll(res.Body)
+		body, _ := io.ReadAll(res.Body)
 		// log.Printf("%#v", string(body))
+		//
 		// if err != nil {
 		// 	return nil, err
 		// }
 		//
-		list, result, err := ParseSearchPhotoHtml(res.Body)
+		list, result, err := ParseSearchPhotoHtml(bytes.NewReader(body))
 		log.Println("List: ", list, ", len: ", len(list), " total pages: ", result.Page.Pages, ", err: ", err)
 
 		if err != nil {
@@ -181,7 +182,7 @@ func GetCrawlerImage(filename, downloadFolder string,
 		}
 
 		log.Errorln("Request error: ", err, ", status code: ", res.StatusCode)
-		log.Println("Retry download ", filename, " in ", b, "s")
+		log.Println("Retry download ", filename, " in ", b)
 		time.Sleep(b)
 	}
 

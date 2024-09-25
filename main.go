@@ -183,44 +183,47 @@ func main() {
 
 			// Next page query only for all downloads success.
 			if !hasErr {
-				if pixabay.PageOffset <= uint64(totalPgs) {
+				if pixabay.PageOffset < uint64(totalPgs) {
 					pixabay.PageOffset++
 				} else {
+					log.Printf("Photos for %s has been downloaded.\n", pixabay.CurrentTag)
 					// Crawled all photos of current tag.
 					if len(tags) == 0 {
 						// Start with latest of all photos.
 						dbmanager.Dbm.DeletePixabay(&pixabay)
 						time.Sleep(500 * time.Millisecond)
-						log.Panic("all done")
+						log.Panic("No more tags to be crawled.")
 
 					} else {
 						// Try to find next tag
+						log.Println("current: ", pixabay.CurrentTag, ", tags: ", tags)
 						position := 0
+						isCurrentTagInList := false
 						for idx, value := range tags {
 							if value == pixabay.CurrentTag {
 								position = idx
+								isCurrentTagInList = true
 							}
 						}
 
-						// already last tag
-						if position == len(tags)-1 {
-							pixabay.PageOffset = 1
-							pixabay.CurrentTag = ""
-							dbmanager.Dbm.AddPixabayRecord(&pixabay)
-							log.Panic("all done")
-
-						}
-
-						if position != 0 {
-							// Continue with next tag
-							pixabay.PageOffset = 1
-							pixabay.CurrentTag = tags[position+1]
-						} else {
+						if !isCurrentTagInList {
 							// Start over with new tags.
 							pixabay.PageOffset = 1
 							pixabay.CurrentTag = tags[0]
-						}
+							log.Printf("Remain tag has been crawled, start new tag with %s\n", pixabay.CurrentTag)
 
+						} else {
+							if position == len(tags)-1 {
+								dbmanager.Dbm.DeletePixabay(&pixabay)
+								time.Sleep(500 * time.Millisecond)
+								log.Panic("All tags has been crawled.")
+							}
+
+							// Continue with next tag
+							pixabay.PageOffset = 1
+							pixabay.CurrentTag = tags[position+1]
+							log.Printf("Next tag: %s\n", pixabay.CurrentTag)
+						}
 					}
 				}
 				dbmanager.Dbm.AddPixabayRecord(&pixabay)

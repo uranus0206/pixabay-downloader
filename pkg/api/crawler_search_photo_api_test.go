@@ -33,7 +33,7 @@ func TestCrawlerSearchPhoto(t *testing.T) {
 		Value:   "",
 		Expires: time.Now().Add(1 * time.Hour),
 	})
-	_, _, err := CrawlerSearchPhoto("people", cookies, 4)
+	_, _, err := CrawlerSearchPhoto("peoples", cookies, 1)
 	if err != nil {
 		t.Error(err)
 	}

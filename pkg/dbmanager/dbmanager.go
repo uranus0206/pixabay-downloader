@@ -3,6 +3,7 @@ package dbmanager
 import (
 	// "gorm.io/driver/sqlite" // 基于 GGO 的 Sqlite 驱动
 
+	"os"
 	log "pixabay-downloader/pkg/qlogger"
 
 	"github.com/glebarez/sqlite" // 纯 Go 实现的 SQLite 驱动, 详情参考： https://github.com/glebarez/sqlite
@@ -38,6 +39,10 @@ func InitWithPath(path string) *DbManager {
 	}
 
 	return Dbm
+}
+
+func DeleteWithPath(path string) error {
+	return os.Remove(path)
 }
 
 func (db *DbManager) CreateTable() {
