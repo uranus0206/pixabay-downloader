@@ -280,7 +280,8 @@ func ParseSearchPhotoHtml(body io.Reader) ([]string, *model.PixabaySearchPhotoRe
 			for _, str := range strArray {
 				if strings.Contains(str, "window.__BOOTSTRAP__") {
 					str = strings.ReplaceAll(str, ";", "")
-					strArr2 := strings.Split(str, " = ")
+					// log.Printf("str: %#v", str)
+					strArr2 := strings.Split(str, ".__BOOTSTRAP__ = ")
 					if len(strArr2) > 1 {
 						bootstrapStr = strArr2[1]
 					}
