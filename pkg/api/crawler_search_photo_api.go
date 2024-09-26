@@ -79,7 +79,11 @@ func CrawlerSearchPhoto(tag string,
 			break
 		}
 
-		log.Errorln("Request error: ", err, ", status code: ", res.StatusCode)
+		if res != nil {
+			log.Errorln("Request error: ", err, ", status code: ", res.StatusCode)
+		} else {
+			log.Errorln("Request error: ", err)
+		}
 		log.Println("Retry search in ", b)
 		time.Sleep(b)
 	}
@@ -181,7 +185,11 @@ func GetCrawlerImage(filename, downloadFolder string,
 			break
 		}
 
-		log.Errorln("Request error: ", err, ", status code: ", res.StatusCode)
+		if res != nil {
+			log.Errorln("Request error: ", err, ", status code: ", res.StatusCode)
+		} else {
+			log.Errorln("Request error: ", err)
+		}
 		log.Println("Retry download ", filename, " in ", b)
 		time.Sleep(b)
 	}
